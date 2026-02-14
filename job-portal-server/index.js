@@ -5,11 +5,7 @@ const port = process.env.PORT || 3000;
 require('dotenv').config()
 // Middleware
 app.use(express.json())
-app.use(cors({
-  origin: process.env.CLIENT_URL ? process.env.CLIENT_URL.split(",") : "http://localhost:5173",
-  methods: ["GET", "POST", "PATCH", "DELETE"],
-  credentials: true
-}));
+app.use(cors());
 
 app.get('/', (req, res) => {
   res.send('Hello Developer')
