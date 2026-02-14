@@ -1,12 +1,25 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, NavLink } from 'react-router-dom';
 import {FaBarsStaggered, FaXmark} from "react-icons/fa6";
-
-import LogoutButton from './LogoutButton'; // Import LogoutButton
-// Import LogoutButton
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        const auth = getAuth();
+        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+            setUser(currentUser);
+        });
+        return unsubscribe;
+    }, []);
+
+    const handleLogout = async () => {
+        const auth = getAuth();
+        await signOut(auth);
+    };
+
     const handleMenuToggler = () => {
         setIsMenuOpen(!isMenuOpen)
     }
@@ -57,10 +70,18 @@ const Navbar = () => {
             </ul>
 
             {/* SIGNUP AND LOGIN BUTTON */}
-            <div className="text-base text-primary font-medium space-x-5 hidden lg:block">
-                <Link to = "/login" className='py-2 px-5 border rounded'>Login</Link>
-                <Link to = "/sign-up" className='py-2 px-5 border rounded bg-blue text-white'>Sign up</Link>
-                {/* <Link to = "/LogoutButton" className='py-2 px-5 border rounded bg-blue text-white'>Logout</Link> */}
+            <div className="text-base text-primary font-medium space-x-5 hidden lg:flex items-center">
+                {user ? (
+                    <>
+                        <span className="text-sm">{user.displayName || user.email}</span>
+                        <button onClick={handleLogout} className='py-2 px-5 border rounded bg-red-500 text-white'>Logout</button>
+                    </>
+                ) : (
+                    <>
+                        <Link to="/login" className='py-2 px-5 border rounded'>Login</Link>
+                        <Link to="/sign-up" className='py-2 px-5 border rounded bg-blue text-white'>Sign up</Link>
+                    </>
+                )}
             </div>
 
             {/* MOBILE MENU */}
@@ -88,8 +109,14 @@ const Navbar = () => {
                     ))
                 }
 
-<li className="text-white py-1"><Link to = "/login">Login</Link></li>
-<li className="text-white py-1"><Link to = "/login">Logout</Link></li>
+{user ? (
+    <li className="text-white py-1"><button onClick={handleLogout}>Logout</button></li>
+) : (
+    <>
+        <li className="text-white py-1"><Link to="/login">Login</Link></li>
+        <li className="text-white py-1"><Link to="/sign-up">Sign up</Link></li>
+    </>
+)}
             </ul>
         </div>
     </header>
