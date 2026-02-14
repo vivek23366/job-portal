@@ -14,7 +14,7 @@ const Home = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    fetch("https://mern-job-portal-website.vercel.app/all-jobs").then(res => res.json()).then(data => {
+    fetch(`${import.meta.env.VITE_API_URL}/all-jobs`).then(res => res.json()).then(data => {
       setJobs(data);
       setIsLoading(false)
     })

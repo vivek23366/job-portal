@@ -32,7 +32,7 @@ const router = createBrowserRouter([
         {
           path: "/edit-job/:id",
           element: <UpdateJob/>,
-          loader: ({params}) => fetch(`https://mern-job-portal-website.vercel.app/all-jobs/${params.id}`)
+          loader: ({params}) => fetch(`${import.meta.env.VITE_API_URL}/all-jobs/${params.id}`)
         },
         {
           path: "/job/:id",

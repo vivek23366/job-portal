@@ -5,23 +5,19 @@ const port = process.env.PORT || 3000;
 require('dotenv').config()
 // Middleware
 app.use(express.json())
-app.use(cors( {
-origin: ["https://https://mern-job-portal-website.vercel.app/"],
-  methods: ["POST", "GET"],
+app.use(cors({
+  origin: process.env.CLIENT_URL || "http://localhost:5173",
+  methods: ["GET", "POST", "PATCH", "DELETE"],
   credentials: true
-}
-));
+}));
 
 app.get('/', (req, res) => {
   res.send('Hello Developer')
 })
 
-// Username - lakshay22dhoundiyal
-// Password - u97klyTxI0FAnbnn
-
 
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@job-portal.7ieojkl.mongodb.net/?retryWrites=true&w=majority&appName=job-portal`;
+const uri = process.env.MONGODB_URI || `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@job-portal.7ieojkl.mongodb.net/?retryWrites=true&w=majority&appName=job-portal`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
